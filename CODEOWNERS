@@ -1,0 +1,8 @@
+# Global fallback
+* @Thundermouse
+
+# Unit tests
+/tests/unit/ @Thundermouse
+
+# CI configuration
+/.github/ @Thundermouse
