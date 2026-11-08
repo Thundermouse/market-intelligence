@@ -1,0 +1,37 @@
+# ===== 隐私：个人持仓与观察列表、运行结果 =====
+# result/ 下含 holdings_*.csv、watchlist.csv、快照、截图与圆桌纪要，全部不入库
+result/
+
+# ===== 数据：行情数据库 =====
+data/
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ===== 环境与密钥 =====
+.env
+.env.*
+*.key
+*.pem
+secrets.*
+credentials.*
+
+# ===== 日志与系统文件 =====
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "market-intelligence"
+version = "0.1.0"
+description = "多周期行情数据管线（A股/港股/美股）"
+requires-python = ">=3.10"
+dependencies = [
+    "akshare>=1.10",
+    "pandas>=2.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
