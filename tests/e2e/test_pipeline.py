@@ -16,6 +16,8 @@ import sys
 from datetime import datetime, date
 from zoneinfo import ZoneInfo
 
+import pytest
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
 
 from market_data.db import get_conn, init_db
@@ -34,6 +36,11 @@ ALL_PERIODS = ["daily", "weekly", "monthly", "15min", "1h"]
 results = {"pass": 0, "fail": 0}
 
 
+def setup_module(module):
+    """pytest 运行前初始化数据库表结构"""
+    init_db()
+
+
 def check(name, condition, detail=""):
     if condition:
         results["pass"] += 1
@@ -43,6 +50,7 @@ def check(name, condition, detail=""):
         print(f"  ❌ {name}  {detail}")
 
 
+@pytest.mark.parametrize("market,code", list(TEST_SYMBOLS.items()))
 def test_market_full_pipeline(market, code):
     """单市场全流程：拉取 → 查询 → 就绪校验"""
     print(f"\n{'='*60}")
@@ -201,8 +209,8 @@ def test_ensure_branches():
 
     # 已有达标 → 跳过（应直接 OK）
     print("\n[1/3] 已有达标 → 应跳过...")
-    results = ensure_one(code, market, ["daily"])
-    ok, msg = results["daily"]
+    ensure_results = ensure_one(code, market, ["daily"])
+    ok, msg = ensure_results["daily"]
     check("已有数据跳过", ok and "已有" in msg, msg)
 
     # 人为制造过期 → 补丁
@@ -221,8 +229,8 @@ def test_ensure_branches():
     ])
     conn.commit()
     conn.close()
-    results = ensure_one(code, market, ["daily"])
-    ok, msg = results["daily"]
+    ensure_results = ensure_one(code, market, ["daily"])
+    ok, msg = ensure_results["daily"]
     check("过期数据补丁", ok and "补丁" in msg, msg)
 
     # 无数据 → 初始化
@@ -231,8 +239,8 @@ def test_ensure_branches():
     conn.execute("DELETE FROM daily_ohlcv WHERE security_code = ?", (code,))
     conn.commit()
     conn.close()
-    results = ensure_one(code, market, ["daily"])
-    ok, msg = results["daily"]
+    ensure_results = ensure_one(code, market, ["daily"])
+    ok, msg = ensure_results["daily"]
     check("无数据初始化", ok and "初始化" in msg, msg)
 
 
